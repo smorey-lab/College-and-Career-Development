@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>College and Career Real World Sim</title>
+<style>
+:root {
+ --site-primary:#174A45;
+ --site-secondary:#DDECE5;
+ --site-background:#F5F7F2;
+ --site-on-primary:#FFFFFF;
+ --site-on-secondary:#173B35;
+ --site-on-background:#1D2A27;
+ --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+ --site-font-heading: Georgia, "Times New Roman", serif;
+ --site-heading-scale:1;
+ --site-spacing-scale:1;
+ --site-radius-scale:1;
+ --site-decoration-opacity:1;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--site-font-body);background:light-dark(var(--site-background),#151b19);color:light-dark(var(--site-on-background),#edf3ef);line-height:1.45}
+#app{min-height:100vh;background-color:light-dark(var(--site-background),#151b19);border-radius:0}
+.hero{background:var(--site-primary);color:var(--site-on-primary);padding:calc(34px * var(--site-spacing-scale)) max(22px,calc((100vw - 1180px)/2));position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:300px;height:300px;border:1px solid #ffffff40;border-radius:50%;right:5%;top:-170px;opacity:var(--site-decoration-opacity);pointer-events:none}
+.eyebrow{text-transform:uppercase;letter-spacing:.15em;font-size:.75rem;font-weight:800;opacity:.8}
+h1,h2,h3{font-family:var(--site-font-heading);line-height:1.1}
+h1{font-size:clamp(2.2rem,5vw,4.2rem);font-size:calc(clamp(2.2rem,5vw,4.2rem) * var(--site-heading-scale));max-width:800px;margin:.35em 0}
+.hero p{max-width:760px;color:#e0eee8}
+.wrap{max-width:1180px;margin:auto;padding:calc(24px * var(--site-spacing-scale)) 22px 60px}
+.notice{background:light-dark(#fff8e6,#342d1d);border:1px solid light-dark(#ead7a6,#665533);border-radius:calc(12px * var(--site-radius-scale));padding:13px 16px;font-size:.9rem;margin-bottom:20px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px}
+.tab,button,.linkbtn{border:1px solid light-dark(#cbd6cf,#3b5149);border-radius:calc(10px * var(--site-radius-scale));padding:10px 14px;font:inherit;font-weight:700;cursor:pointer;background:light-dark(#fff,#202a26);color:light-dark(#20352e,#eff7f1)}
+.tab[aria-selected="true"],button.primary{background:var(--site-primary);color:var(--site-on-primary);border-color:var(--site-primary)}
+button:hover,.tab:hover{filter:brightness(.96)}
+.panel{background:light-dark(#fff,#1d2622);border:1px solid light-dark(#dce4de,#35433c);border-radius:calc(16px * var(--site-radius-scale));padding:22px;margin-bottom:18px;box-shadow:0 4px 18px #102a1a08}
+.panel h2{margin-top:0;font-size:calc(1.7rem * var(--site-heading-scale))}
+.grid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:16px}
+.span-12{grid-column:span 12}.span-8{grid-column:span 8}.span-7{grid-column:span 7}.span-6{grid-column:span 6}.span-5{grid-column:span 5}.span-4{grid-column:span 4}.span-3{grid-column:span 3}
+label{display:block;font-size:.85rem;font-weight:750;margin:0 0 6px;color:light-dark(#41564c,#c3d6ca)}
+input,select{width:100%;min-width:0;padding:11px 12px;border:1px solid light-dark(#c7d3ca,#42534a);border-radius:9px;background:light-dark(#fff,#121a16);color:inherit;font:inherit}
+.field{margin-bottom:13px}.hint{font-size:.78rem;color:light-dark(#66766c,#a6b8ac);margin-top:5px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kpi{background:light-dark(#f0f5f0,#27342d);padding:15px;border-radius:12px;min-width:0}
+.kpi .label{font-size:.78rem;color:light-dark(#52665a,#bbd0c1)}.kpi strong{display:block;font-size:clamp(1.15rem,2vw,1.7rem);margin-top:5px;overflow-wrap:anywhere}
+.bar{height:12px;border-radius:20px;background:light-dark(#e1e8e2,#34453b);overflow:hidden;display:flex;margin:12px 0}
+.bar span{height:100%;display:block}
+.small{font-size:.86rem;color:light-dark(#5b6d63,#b5c6ba)}
+.results{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.listing{border:1px solid light-dark(#dce5dd,#3a4b40);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+.listing h3{font-size:1.12rem;margin:0}
+.price{font-size:1.2rem;font-weight:850;color:light-dark(#174a45,#9ed7bd)}
+.pill{display:inline-block;font-size:.72rem;font-weight:800;border-radius:99px;background:var(--site-secondary);color:var(--site-on-secondary);padding:4px 8px}
+.listing .bottom{margin-top:auto;display:flex;gap:8px;flex-wrap:wrap}
+a{color:light-dark(#17675c,#9bd9c5);font-weight:700}
+table{width:100%;border-collapse:collapse;font-size:.9rem}td,th{text-align:left;padding:10px 8px;border-bottom:1px solid light-dark(#e0e7e1,#39483f)}th{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:light-dark(#52645a,#bfd0c4)}
+.question{padding:14px 0;border-bottom:1px solid light-dark(#e0e7e1,#39483f)}.question:last-child{border:0}
+footer{font-size:.8rem;color:light-dark(#6b7c71,#a8b8ac);padding-top:15px}
+@media(max-width:760px){.span-8,.span-7,.span-6,.span-5,.span-4,.span-3{grid-column:span 12}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.results{grid-template-columns:1fr}.wrap{padding:18px 14px 40px}.panel{padding:16px}}
+</style>
+</head>
+<body>
+<div id="app">
+<header class="hero">
+ <h1>College and Career Real World Sim</h1>
+ <p>Build a life after high school: choose a career, compare real-world listings, calculate loans, and test how everyday costs shape your choices.</p>
+</header>
+<main class="wrap">
+ <div class="notice"><strong>Student simulation:</strong> housing and vehicle results open live searches on listing websites; listings and loan rates may change. The budget uses estimates, not financial advice. The handout's 25% tax assumption, $300 utilities, and $2.99/gallon gas assumption are preserved where noted.</div>
+ <nav class="tabs" aria-label="Simulation sections">
+  <button class="tab" data-tab="career" aria-selected="true">1 · Career & Pay</button>
+  <button class="tab" data-tab="housing" aria-selected="false">2 · Housing</button>
+  <button class="tab" data-tab="vehicle" aria-selected="false">3 · Vehicle</button>
+  <button class="tab" data-tab="budget" aria-selected="false">4 · Monthly Budget</button>
+  <button class="tab" data-tab="reflection" aria-selected="false">5 · Handout Analysis</button>
+ </nav>
+ <section id="career" class="section">
+  <div class="panel">
+   <h2>Choose your career</h2>
+   <p class="small">Select one of 50 occupations across college degrees, technical training, and high school diploma pathways. Salaries are illustrative annual estimates for this classroom activity.</p>
+   <div class="grid">
+    <div class="field span-7"><label for="careerSelect">Occupation</label><select id="careerSelect"></select></div>
+    <div class="field span-5"><label for="salary">Annual salary ($)</label><input id="salary" type="number" min="0" max="500000" step="500" value="65000"></div>
+    <div class="field span-4"><label>Education pathway</label><input id="education" readonly></div>
+    <div class="field span-4"><label>Gross monthly pay</label><input id="gross" readonly></div>
+    <div class="field span-4"><label>Net monthly pay (25% taxes)</label><input id="net" readonly></div>
+   </div>
+   <div class="kpis" style="margin-top:12px">
+    <div class="kpi"><div class="label">Annual salary</div><strong id="salaryKpi">$65,000</strong></div>
+    <div class="kpi"><div class="label">Gross per month</div><strong id="grossKpi">$5,417</strong></div>
+    <div class="kpi"><div class="label">Estimated taxes</div><strong id="taxKpi">$1,354</strong></div>
+    <div class="kpi"><div class="label">Take-home / month</div><strong id="netKpi">$4,063</strong></div>
+   </div>
+  </div>
+  <div class="panel">
+   <h2>Set your priorities</h2>
+   <div class="grid">
+    <div class="field span-4"><label for="food">Food / month ($)</label><input id="food" type="number" min="0" value="500"></div>
+    <div class="field span-4"><label for="utilities">Utilities / month ($)</label><input id="utilities" type="number" min="0" value="300"></div>
+    <div class="field span-4"><label for="other">Other essentials / month ($)</label><input id="other" type="number" min="0" value="180"></div>
+    <div class="field span-4"><label for="savingsRate">Savings & investments</label><input id="savingsRate" type="number" min="0" max="100" value="15"><div class="hint">% of net monthly pay</div></div>
+    <div class="field span-4"><label for="funRate">Recreation</label><input id="funRate" type="number" min="0" max="100" value="10"><div class="hint">% of net monthly pay</div></div>
+    <div class="field span-4"><label for="gasPrice">Gas price / gallon ($)</label><input id="gasPrice" type="number" min="0" step=".01" value="2.99"><div class="hint">Handout assumption; change to local price</div></div>
+   </div>
+  </div>
+ </section>
+ <section id="housing" class="section" hidden>
+  <div class="panel">
+   <h2>Find a place in San Diego County</h2>
+   <p class="small">Use live listing searches to explore houses for sale or apartments for rent. Search results are external live pages, not embedded feeds; choose a listing and enter its price below to use it in your budget.</p>
+   <div class="grid">
+    <div class="field span-4"><label for="homeMode">Housing choice</label><select id="homeMode"><option value="rent">Rent apartment</option><option value="buy">Buy a house</option></select></div>
+    <div class="field span-4"><label for="homePrice">Monthly rent or purchase price ($)</label><input id="homePrice" type="number" min="0" value="2800"></div>
+    <div class="field span-4"><label for="downPayment">Down payment ($)</label><input id="downPayment" type="number" min="0" value="100000"></div>
+    <div class="field span-4"><label for="rate">30-year fixed mortgage rate (%)</label><input id="rate" type="number" min="0" max="25" step=".01" value="6.25"><div class="hint">Editable classroom assumption; verify today's quote with a lender.</div></div>
+    <div class="field span-4"><label for="propertyTax">Property tax + insurance / month ($)</label><input id="propertyTax" type="number" min="0" value="900"></div>
+    <div class="field span-4"><label for="hoa">HOA / maintenance / month ($)</label><input id="hoa" type="number" min="0" value="250"></div>
+   </div>
+   <div class="results" style="margin-top:8px">
+    <article class="listing"><span class="pill">Rent</span><h3>San Diego County apartments</h3><p class="small">Search apartments for rent, then copy a monthly rent into the housing field.</p><div class="bottom"><a href="https://www.google.com/search?q=San+Diego+County+apartments+for+rent" target="_blank" rel="noopener">Search rental listings ↗</a></div></article>
+    <article class="listing"><span class="pill">Buy</span><h3>San Diego County homes</h3><p class="small">Search homes for sale, then enter a selected home's price and down payment.</p><div class="bottom"><a href="https://www.google.com/search?q=San+Diego+County+homes+for+sale" target="_blank" rel="noopener">Search homes for sale ↗</a></div></article>
+   </div>
+   <div class="kpis" style="margin-top:18px">
+    <div class="kpi"><div class="label">Loan principal</div><strong id="loanOut">$0</strong></div>
+    <div class="kpi"><div class="label">Mortgage principal + interest</div><strong id="mortgageOut">$0</strong></div>
+    <div class="kpi"><div class="label">Estimated total housing</div><strong id="housingOut">$2,800</strong></div>
+    <div class="kpi"><div class="label">Loan term</div><strong>30 years</strong></div>
+   </div>
+   <p class="small">Mortgage estimate uses a fixed monthly payment formula and excludes closing costs, PMI, and any changes in taxes or insurance. If renting, the rent field is treated as monthly rent.</p>
+  </div>
+ </section>
+ <section id="vehicle" class="section" hidden>
+  <div class="panel">
+   <h2>Shop for a car or truck</h2>
+   <p class="small">Open live vehicle searches, select a vehicle, and enter the price. The simulation calculates a 48-month loan. APR is an editable assumption because rates vary by credit, lender, vehicle, and loan terms.</p>
+   <div class="results">
+    <article class="listing"><span class="pill">Cars</span><h3>Cars for sale</h3><p class="small">Compare used and new cars across dealers and marketplaces.</p><div class="bottom"><a href="https://www.google.com/search?q=cars+for+sale+San+Diego" target="_blank" rel="noopener">Search cars ↗</a></div></article>
+    <article class="listing"><span class="pill">Trucks</span><h3>Trucks for sale</h3><p class="small">Compare truck prices and features.</p><div class="bottom"><a href="https://www.google.com/search?q=trucks+for+sale+San+Diego" target="_blank" rel="noopener">Search trucks ↗</a></div></article>
+   </div>
+   <div class="grid" style="margin-top:18px">
+    <div class="field span-4"><label for="vehicleType">Vehicle type</label><select id="vehicleType"><option value="Car">Car</option><option value="SUV">SUV</option><option value="Truck">Truck</option><option value="Motorcycle">Motorcycle</option><option value="Bus pass">Annual bus pass</option></select></div>
+    <div class="field span-4"><label for="vehiclePrice">Vehicle price ($)</label><input id="vehiclePrice" type="number" min="0" value="24000"></div>
+    <div class="field span-4"><label for="carDown">Down payment ($)</label><input id="carDown" type="number" min="0" value="2000"></div>
+    <div class="field span-4"><label for="carRate">Auto loan APR (%)</label><input id="carRate" type="number" min="0" max="40" step=".1" value="7.5"></div>
+    <div class="field span-4"><label for="gallons">Gallons / month</label><select id="gallons"><option value="45">Car · 45 gallons</option><option value="65">SUV/truck · 65 gallons</option><option value="20">Motorcycle · 20 gallons</option><option value="0">Bus pass · no gas</option></select></div>
+    <div class="field span-4"><label for="busPass">Annual bus pass cost ($)</label><input id="busPass" type="number" min="0" value="1200"><div class="hint">Replace with current NCTD fare if using bus pass.</div></div>
+   </div>
+   <div class="kpis" style="margin-top:12px">
+    <div class="kpi"><div class="label">Amount financed</div><strong id="carLoanOut">$22,000</strong></div>
+    <div class="kpi"><div class="label">Monthly payment (48 mo.)</div><strong id="carPaymentOut">$0</strong></div>
+    <div class="kpi"><div class="label">Estimated gas / month</div><strong id="gasOut">$134.55</strong></div>
+    <div class="kpi"><div class="label">Total transport / month</div><strong id="transportOut">$0</strong></div>
+   </div>
+   <p class="small">The handout's original method divides vehicle price by 48 with no interest. This version shows a more realistic interest-based estimate; down payment is deducted first.</p>
+  </div>
+ </section>
+ <section id="budget" class="section" hidden>
+  <div class="panel">
+   <h2>Your monthly budget</h2>
+   <p class="small">A clear snapshot of take-home pay, needs, transportation, housing, savings, and recreation.</p>
+   <div class="kpis">
+    <div class="kpi"><div class="label">Net income</div><strong id="bNet">$0</strong></div>
+    <div class="kpi"><div class="label">Total outflow</div><strong id="bOut">$0</strong></div>
+    <div class="kpi"><div class="label">Money remaining</div><strong id="bRemain">$0</strong></div>
+    <div class="kpi"><div class="label">Weekly remainder</div><strong id="bWeek">$0</strong></div>
+   </div>
+   <div class="bar" aria-label="Budget allocation"><span id="barHousing" style="background:#397b67;width:25%"></span><span id="barTransport" style="background:#d2a44a;width:15%"></span><span id="barFood" style="background:#6c8fc2;width:10%"></span><span id="barSave" style="background:#7e6db1;width:15%"></span><span id="barFun" style="background:#d27c67;width:10%"></span><span id="barOther" style="background:#9aa79d;width:5%"></span></div>
+   <table><thead><tr><th>Category</th><th>Monthly estimate</th><th>Share of net income</th></tr></thead><tbody id="budgetRows"></tbody></table>
+   <div class="grid" style="margin-top:18px">
+    <div class="span-6"><h3>Loan impact comparison</h3><p class="small">Compare a 4-year car loan with a 30-year mortgage. The car payment is higher over a shorter period, while a mortgage typically takes a much larger amount of total interest over its long term.</p><table><tbody id="loanCompare"></tbody></table></div>
+    <div class="span-6"><h3>Try a life change</h3><div class="field"><label for="kids">Add childcare ($18,000/year per handout)</label><select id="kids"><option value="0">No childcare cost</option><option value="1500">Add $1,500 / month</option></select></div><div class="field"><label for="partner">Household income</label><select id="partner"><option value="1">One income</option><option value="2">Two similar incomes</option></select></div><div class="kpi"><div class="label">Remaining after changes</div><strong id="lifeRemain">$0</strong></div></div>
+   </div>
+  </div>
+ </section>
+ <section id="reflection" class="section" hidden>
+  <div class="panel">
+   <h2>Handout: Simulation Analysis</h2>
+   <p class="small">Use your results to respond to the original Social Class and Stratification Simulation prompts. Responses are not graded; they help you explain your reasoning.</p>
+   <div class="question"><strong>1. Social class</strong><p>Based on your annual salary and job description, what part of the U.S. social class structure might you fall into (upper, middle, or lower)? Explain what else besides salary could affect this classification.</p><textarea id="q1" rows="3" style="width:100%;padding:12px;border-radius:9px;border:1px solid #b9c9bf;font:inherit;background:light-dark(#fff,#121a16);color:inherit"></textarea></div>
+   <div class="question"><strong>2. Extracurricular activities</strong><p>What two activities could you afford in your free time? Include estimated costs and compare them with your weekly remaining budget.</p><textarea id="q2" rows="3" style="width:100%;padding:12px;border-radius:9px;border:1px solid #b9c9bf;font:inherit;background:light-dark(#fff,#121a16);color:inherit"></textarea></div>
+   <div class="question"><strong>3. Budget cuts</strong><p>What might need to be reduced or cut to cover basic necessities if your budget is negative?</p><textarea id="q3" rows="3" style="width:100%;padding:12px;border-radius:9px;border:1px solid #b9c9bf;font:inherit;background:light-dark(#fff,#121a16);color:inherit"></textarea></div>
+   <div class="question"><strong>4. Having children</strong><p>The handout estimates childcare at $18,000 per year. How does adding $1,500 per month change your remaining income?</p><textarea id="q4" rows="3" style="width:100%;padding:12px;border-radius:9px;border:1px solid #b9c9bf;font:inherit;background:light-dark(#fff,#121a16);color:inherit"></textarea></div>
+   <div class="question"><strong>5. A spouse with similar income</strong><p>How does a second similar income change affordability, savings, recreation, and quality of life? What new costs might a two-person household have?</p><textarea id="q5" rows="3" style="width:100%;padding:12px;border-radius:9px;border:1px solid #b9c9bf;font:inherit;background:light-dark(#fff,#121a16);color:inherit"></textarea></div>
+   <div class="question"><strong>6. AXES writing response</strong><p>Explain what life might be like at this social class level in America. Would you be able to save, vacation, start a family, or buy a home? How easy would it be to move up the class structure? Support your response with evidence from your budget.</p><textarea id="axes" rows="6" style="width:100%;padding:12px;border-radius:9px;border:1px solid #b9c9bf;font:inherit;background:light-dark(#fff,#121a16);color:inherit"></textarea></div>
+   <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><button class="primary" id="printBtn">Print / Save as PDF</button><button id="clearAnswers">Clear reflection answers</button></div>
+  </div>
+ </section>
+ <footer>Classroom model based on the uploaded “Social Class and Stratification Simulation” handout. Salary, cost, and APR defaults are adjustable examples. External listing searches may show sponsored results; check listing details independently. Rates are not automatically fetched live in this standalone preview.</footer>
+</main>
+</div>
+<script>
+const careers = [
+["Registered Nurse",92000,"College degree"],["Elementary School Teacher",65000,"College degree"],["High School Teacher",72000,"College degree"],["Software Developer",125000,"College degree"],["Civil Engineer",105000,"College degree"],["Mechanical Engineer",102000,"College degree"],["Accountant",78000,"College degree"],["Marketing Manager",95000,"College degree"],["Human Resources Specialist",72000,"College degree"],["Graphic Designer",65000,"College degree"],["Psychologist",90000,"College degree"],["Physical Therapist",105000,"College degree"],["Pharmacist",145000,"College degree"],["Dentist",150000,"College degree"],["Physician Assistant",135000,"College degree"],["Data Analyst",88000,"College degree"],["Cybersecurity Analyst",110000,"College degree"],["Environmental Scientist",78000,"College degree"],["Social Worker",62000,"College degree"],["Journalist",58000,"College degree"],["Electrician",78000,"Technical degree / apprenticeship"],["Plumber",76000,"Technical degree / apprenticeship"],["HVAC Technician",68000,"Technical degree / apprenticeship"],["Automotive Technician",58000,"Technical degree / apprenticeship"],["Welder",62000,"Technical degree / apprenticeship"],["Dental Hygienist",105000,"Technical degree"],["Radiologic Technologist",85000,"Technical degree"],["Medical Assistant",44000,"Technical degree"],["Licensed Vocational Nurse",72000,"Technical degree"],["Web Developer",90000,"Technical degree / portfolio"],["Commercial Driver",65000,"Technical license"],["Aircraft Mechanic",85000,"Technical degree"],["Solar Installer",62000,"Technical degree"],["IT Support Specialist",62000,"Technical degree"],["Paralegal",65000,"Technical degree"],["Police Officer",82000,"High school diploma + academy"],["Firefighter",78000,"High school diploma + academy"],["Construction Laborer",48000,"High school diploma / training"],["Warehouse Associate",42000,"High school diploma"],["Administrative Assistant",48000,"High school diploma"],["Retail Sales Associate",36000,"High school diploma"],["Customer Service Representative",43000,"High school diploma"],["Cook",42000,"High school diploma / training"],["Landscaper",40000,"High school diploma / training"],["Childcare Worker",38000,"High school diploma / training"],["Security Guard",42000,"High school diploma / license"],["Delivery Driver",46000,"High school diploma / license"],["Hotel Front Desk Agent",40000,"High school diploma"],["Fitness Trainer",52000,"Certification / high school"],["Veterinary Assistant",39000,"High school diploma / training"]
+];
+const $=id=>document.getElementById(id);
+const money=n=>Number.isFinite(n)?n.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0}):"—";
+const precise=n=>Number.isFinite(n)?n.toLocaleString("en-US",{style:"currency",currency:"USD",minimumFractionDigits:2,maximumFractionDigits:2}):"—";
+const val=id=>Math.max(0,Number($(id).value)||0);
+const payment=(principal,annualRate,months)=>{if(principal<=0||months<=0)return 0;const r=annualRate/1200;return r===0?principal/months:principal*r/(1-Math.pow(1+r,-months));};
+let current={};
+function initCareers(){careers.forEach((c,i)=>{const o=document.createElement("option");o.value=i;o.textContent=`${c[0]} — ${money(c[1])} · ${c[2]}`;$("careerSelect").appendChild(o)});$("careerSelect").value="0";applyCareer();}
+function applyCareer(){const c=careers[Number($("careerSelect").value)]||careers[0];$("salary").value=c[1];$("education").value=c[2];update();}
+function update(){
+ const salary=val("salary"),gross=salary/12,net=gross*.75,tax=gross*.25;
+ $("gross").value=money(gross);$("net").value=money(net);$("salaryKpi").textContent=money(salary);$("grossKpi").textContent=money(gross);$("taxKpi").textContent=money(tax);$("netKpi").textContent=money(net);
+ const isBuy=$("homeMode").value==="buy",price=val("homePrice"),down=val("downPayment"),loan=Math.max(0,price-down),mi=payment(loan,val("rate"),360),home=isBuy?mi+val("propertyTax")+val("hoa"):price;
+ $("loanOut").textContent=money(loan);$("mortgageOut").textContent=money(mi);$("housingOut").textContent=money(home);
+ const type=$("vehicleType").value,vehiclePrice=type==="Bus pass"?0:val("vehiclePrice"),carLoan=Math.max(0,vehiclePrice-val("carDown")),carPay=type==="Bus pass"?0:payment(carLoan,val("carRate"),48),gas=val("gallons")*val("gasPrice"),bus=type==="Bus pass"?val("busPass")/12:0,transport=carPay+gas+bus;
+ $("carLoanOut").textContent=money(carLoan);$("carPaymentOut").textContent=money(carPay);$("gasOut").textContent=money(gas);$("transportOut").textContent=money(transport);
+ const save=net*val("savingsRate")/100,fun=net*val("funRate")/100,food=val("food"),utilities=val("utilities"),other=val("other"),out=home+transport+food+utilities+other+save+fun,remain=net-out,week=remain/4;
+ const rows=[["Housing",home],["Transportation (loan + fuel/pass)",transport],["Food",food],["Utilities",utilities],["Other essentials",other],["Savings & investments",save],["Recreation",fun]];
+ $("budgetRows").innerHTML=rows.map(([name,n])=>`<tr><td>${name}</td><td>${money(n)}</td><td>${net?Math.round(n/net*100)+"%":"—"}</td></tr>`).join("");
+ $("bNet").textContent=money(net);$("bOut").textContent=money(out);$("bRemain").textContent=money(remain);$("bRemain").style.color=remain<0?"#c65b4e":"";$("bWeek").textContent=money(week);
+ const pct=n=>net?Math.max(0,Math.min(100,n/net*100)):0;const total=rows.reduce((s,x)=>s+x[1],0)||1;
+ ["barHousing","barTransport","barFood","barSave","barFun","barOther"].forEach((id,i)=>$(id).style.width=(rows[i][1]/total*100)+"%");
+ const totalInterestCar=Math.max(0,carPay*48-carLoan),totalInterestHome=Math.max(0,mi*360-loan);
+ $("loanCompare").innerHTML=`<tr><th></th><th>Car · 4 years</th><th>Mortgage · 30 years</th></tr>
+ <tr><td>Loan amount</td><td>${money(carLoan)}</td><td>${money(loan)}</td></tr>
+ <tr><td>Monthly principal + interest</td><td>${money(carPay)}</td><td>${money(mi)}</td></tr>
+ <tr><td>Total scheduled payments</td><td>${money(carPay*48)}</td><td>${money(mi*360)}</td></tr>
+ <tr><td>Estimated interest</td><td>${money(totalInterestCar)}</td><td>${money(totalInterestHome)}</td></tr>`;
+ const household=Number($("partner").value),kids=val("kids"),lifeRemain=net*household-out+home*(household-1)-kids;
+ $("lifeRemain").textContent=money(lifeRemain);$("lifeRemain").style.color=lifeRemain<0?"#c65b4e":"";
+ current={salary,gross,net,tax,home,loan,mi,carLoan,carPay,gas,transport,food,utilities,other,save,fun,out,remain,week};
+}
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>{document.querySelectorAll("[data-tab]").forEach(x=>x.setAttribute("aria-selected",x===b?"true":"false"));document.querySelectorAll(".section").forEach(s=>s.hidden=s.id!==b.dataset.tab)}));
+$("careerSelect").addEventListener("change",applyCareer);
+["salary","food","utilities","other","savingsRate","funRate","gasPrice","homeMode","homePrice","downPayment","rate","propertyTax","hoa","vehicleType","vehiclePrice","carDown","carRate","gallons","busPass","kids","partner"].forEach(id=>$(id).addEventListener("input",update));
+$("vehicleType").addEventListener("change",()=>{const t=$("vehicleType").value;$("gallons").value=t==="SUV"||t==="Truck"?"65":t==="Motorcycle"?"20":t==="Bus pass"?"0":"45";update()});
+$("printBtn").addEventListener("click",()=>window.print());
+$("clearAnswers").addEventListener("click",()=>{["q1","q2","q3","q4","q5","axes"].forEach(id=>$(id).value="")});
+initCareers();update();
+</script>
+</body>
+</html>
